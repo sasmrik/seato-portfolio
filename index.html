@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0A0A0A">
+  <meta name="description" content="Seato — создаю современные сайты для бизнеса: от идеи и дизайна до адаптивной разработки и запуска.">
+  <title>Seato — сайты для бизнеса</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --panel: #101216;
+      --text: #f5f7fa;
+      --muted: #9ba3af;
+      --cyan: #00e5ff;
+      --purple: #8b5cf6;
+      --border: rgba(255,255,255,.1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 90px; background: var(--bg); }
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      position: fixed; inset: -20%; z-index: -2; content: ""; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 14% 13%, rgba(0,229,255,.11), transparent 30%),
+        radial-gradient(ellipse at 83% 25%, rgba(139,92,246,.12), transparent 31%),
+        radial-gradient(ellipse at 54% 90%, rgba(0,229,255,.055), transparent 34%);
+      filter: blur(32px);
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input, textarea { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .mono { font-family: "DM Mono", monospace; }
+
+    .glass {
+      border: 1px solid var(--border);
+      background: rgba(16,18,22,.72);
+      box-shadow: 0 18px 60px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.035);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    }
+    .gradient-border {
+      border: 1px solid transparent;
+      background: linear-gradient(var(--panel), var(--panel)) padding-box,
+                  linear-gradient(140deg, rgba(0,229,255,.5), rgba(139,92,246,.25), rgba(255,255,255,.08)) border-box;
+    }
+    .text-gradient {
+      color: transparent;
+      background: linear-gradient(105deg, #fff 8%, #9df4ff 52%, #c4aaff 100%);
+      -webkit-background-clip: text; background-clip: text;
+    }
+    .primary-btn {
+      min-height: 50px; display: inline-flex; align-items: center; justify-content: center;
+      gap: .65rem; border: 1px solid rgba(0,229,255,.4); border-radius: 14px;
+      padding: .85rem 1.2rem; background: var(--cyan); color: #041014; font-weight: 800;
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+      box-shadow: 0 0 24px rgba(0,229,255,.15);
+    }
+    .primary-btn:hover { transform: translateY(-2px); background: #52efff; box-shadow: 0 0 32px rgba(0,229,255,.28); }
+    .secondary-btn {
+      min-height: 50px; display: inline-flex; align-items: center; justify-content: center;
+      gap: .6rem; border: 1px solid var(--border); border-radius: 14px;
+      padding: .85rem 1.2rem; color: var(--text); background: rgba(255,255,255,.035);
+      font-weight: 700; transition: border-color .2s ease, background .2s ease, transform .2s ease;
+    }
+    .secondary-btn:hover { transform: translateY(-2px); border-color: rgba(0,229,255,.42); background: rgba(0,229,255,.07); }
+    .eyebrow { color: var(--cyan); font-size: .72rem; font-weight: 700; letter-spacing: .17em; text-transform: uppercase; }
+    .nav-shell {
+      border: 1px solid rgba(255,255,255,.09); background: rgba(10,10,10,.78);
+      box-shadow: 0 10px 40px rgba(0,0,0,.28); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    }
+    .project-card, .service-card {
+      border: 1px solid rgba(255,255,255,.09);
+      background: linear-gradient(145deg, rgba(21,24,30,.94), rgba(13,15,19,.96));
+      box-shadow: 0 20px 55px rgba(0,0,0,.19);
+      transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+    }
+    .project-card:hover, .service-card:hover {
+      transform: translateY(-5px); border-color: rgba(0,229,255,.34);
+      box-shadow: 0 24px 65px rgba(0,0,0,.32), 0 0 30px rgba(0,229,255,.05);
+    }
+    .project-visual {
+      position: relative; display: flex; min-height: 235px; overflow: hidden;
+      align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,.07);
+      border-radius: 16px; background: #0b0e13;
+    }
+    .project-visual img {
+      width: 100%; height: 100%; object-fit: cover; object-position: top;
+      transition: transform 0.5s ease;
+    }
+    .project-card:hover .project-visual img { transform: scale(1.05); }
+    .tags span {
+      border: 1px solid rgba(255,255,255,.1); border-radius: 999px;
+      background: rgba(255,255,255,.035); padding: .35rem .65rem;
+      color: #b9c1cc; font-family: "DM Mono", monospace; font-size: .68rem;
+    }
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .65s ease, transform .65s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .modal { opacity: 0; visibility: hidden; transition: opacity .22s ease, visibility .22s ease; }
+    .modal.open { opacity: 1; visibility: visible; }
+    .modal-panel { transform: translateY(12px) scale(.99); transition: transform .25s ease; }
+    .modal.open .modal-panel { transform: translateY(0) scale(1); }
+    .form-input {
+      width: 100%; min-height: 50px; border: 1px solid rgba(255,255,255,.13);
+      border-radius: 12px; outline: none; background: rgba(255,255,255,.04);
+      padding: .8rem .9rem; color: #fff; transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .form-input::placeholder { color: #737d8b; }
+    .form-input:focus { border-color: rgba(0,229,255,.65); box-shadow: 0 0 0 3px rgba(0,229,255,.1); }
+    .mobile-menu { display: none; }
+    .mobile-menu.open { display: block; }
+    .orb {
+      position: absolute; border-radius: 999px; filter: blur(1px);
+      pointer-events: none; animation: float 8s ease-in-out infinite alternate;
+    }
+    @keyframes float { to { transform: translate3d(0,-14px,0); } }
+    .lang-switch {
+      display: inline-flex; align-items: center; gap: 2px; border: 1px solid var(--border);
+      border-radius: 10px; padding: 3px; background: rgba(255,255,255,.03);
+    }
+    .lang-switch button {
+      border: 0; background: transparent; color: var(--muted); font-size: 11px;
+      font-weight: 700; padding: 4px 8px; border-radius: 7px; cursor: pointer;
+      transition: background .2s ease, color .2s ease;
+    }
+    .lang-switch button.active { background: rgba(0,229,255,.15); color: var(--cyan); }
+    @media (max-width: 640px) { .project-visual { min-height: 205px; } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="fixed inset-x-0 top-0 z-40 px-3 pt-3 sm:px-6">
+    <div class="nav-shell mx-auto flex max-w-7xl items-center justify-between rounded-2xl px-4 py-3 sm:px-5">
+      <a href="#top" class="flex items-center gap-3" aria-label="На главную">
+        <!-- Аватарка в шапке -->
+        <img src="avatar.jpg" alt="Seato" class="h-10 w-10 rounded-full object-cover border border-cyan-300/25 shadow-[0_0_15px_rgba(0,229,255,0.2)]">
+        <span class="leading-tight">
+          <span class="block text-sm font-extrabold tracking-wide text-white">Seato</span>
+          <span class="mono block text-[10px] text-white/40" data-i18n="header_role">web developer</span>
+        </span>
+      </a>
+
+      <nav class="hidden items-center gap-6 lg:flex" aria-label="Основная навигация">
+        <a class="text-sm text-white/65 transition hover:text-cyan-200" href="#cases" data-i18n="nav_cases">Кейсы</a>
+        <a class="text-sm text-white/65 transition hover:text-cyan-200" href="#services" data-i18n="nav_services">Услуги</a>
+        <a class="text-sm text-white/65 transition hover:text-cyan-200" href="#about" data-i18n="nav_about">Обо мне</a>
+        <a class="text-sm text-white/65 transition hover:text-cyan-200" href="#contacts" data-i18n="nav_contacts">Контакты</a>
+      </nav>
+
+      <div class="hidden items-center gap-3 lg:flex">
+        <div class="lang-switch">
+          <button type="button" data-lang="ru" class="active">RU</button>
+          <button type="button" data-lang="en">EN</button>
+        </div>
+        <a href="https://t.me/mky82" target="_blank" rel="noopener noreferrer" class="primary-btn px-4 py-2.5 text-sm">
+          <span data-i18n="contact_btn">Связаться</span> <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+
+      <div class="flex items-center gap-2 lg:hidden">
+        <div class="lang-switch">
+          <button type="button" data-lang="ru" class="active">RU</button>
+          <button type="button" data-lang="en">EN</button>
+        </div>
+        <button id="menuToggle" class="grid h-11 w-11 place-items-center rounded-xl border border-white/10 text-xl text-white" type="button" aria-label="Открыть меню" aria-expanded="false">☰</button>
+      </div>
+    </div>
+
+    <div id="mobileMenu" class="mobile-menu nav-shell mx-auto mt-2 max-w-7xl rounded-2xl p-4 lg:hidden">
+      <nav class="grid gap-1">
+        <a href="#cases" class="rounded-xl px-3 py-3 text-sm text-white/75 hover:bg-white/5" data-i18n="nav_cases">Кейсы</a>
+        <a href="#services" class="rounded-xl px-3 py-3 text-sm text-white/75 hover:bg-white/5" data-i18n="nav_services">Услуги</a>
+        <a href="#about" class="rounded-xl px-3 py-3 text-sm text-white/75 hover:bg-white/5" data-i18n="nav_about">Обо мне</a>
+        <a href="#contacts" class="rounded-xl px-3 py-3 text-sm text-white/75 hover:bg-white/5" data-i18n="nav_contacts">Контакты</a>
+        <a href="https://t.me/mky82" target="_blank" rel="noopener noreferrer" class="primary-btn mt-2 w-full">
+          <span data-i18n="contact_btn">Связаться</span> ↗
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="relative overflow-hidden px-5 pb-20 pt-36 sm:px-8 sm:pb-28 sm:pt-44">
+      <div class="orb right-[8%] top-32 h-40 w-40 bg-cyan-400/10 sm:h-64 sm:w-64"></div>
+      <div class="orb right-[27%] top-[55%] h-20 w-20 bg-violet-500/10" style="animation-delay:-3s"></div>
+
+      <div class="relative mx-auto max-w-7xl">
+        <div class="reveal max-w-4xl">
+          <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[.035] px-4 py-2">
+            <span class="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_12px_#00E5FF]"></span>
+            <span class="mono text-xs text-white/65" data-i18n="hero_badge">ДИЗАЙН · РАЗРАБОТКА · ЗАПУСК</span>
+          </div>
+
+          <h1 class="text-5xl font-extrabold leading-[1.02] tracking-[-.055em] text-white sm:text-7xl lg:text-[5.8rem]">
+            <span data-i18n="hero_title_1">Создаю сайты,</span><br>
+            <span class="text-gradient" data-i18n="hero_title_2">которые приносят</span><br>
+            <span data-i18n="hero_title_3">клиентов</span><span class="text-cyan-300">.</span>
+          </h1>
+
+          <p class="mt-7 max-w-2xl text-base leading-7 text-white/60 sm:text-lg sm:leading-8" data-i18n="hero_desc">
+            Разработка под ключ: от идеи до запуска. Продуманный дизайн, адаптивная вёрстка и удобный путь от первого взгляда до заявки.
+          </p>
+
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a href="#cases" class="primary-btn"><span data-i18n="hero_btn_cases">Посмотреть работы</span> <span aria-hidden="true">↓</span></a>
+            <a href="#contacts" class="secondary-btn"><span data-i18n="hero_btn_contact">Обсудить проект</span> <span aria-hidden="true">↗</span></a>
+          </div>
+
+          <div class="mono mt-9 flex flex-wrap gap-x-6 gap-y-2 text-xs text-white/40">
+            <span data-i18n="hero_step_1">01 / CONCEPT</span>
+            <span data-i18n="hero_step_2">02 / DESIGN</span>
+            <span data-i18n="hero_step_3">03 / DEVELOPMENT</span>
+            <span data-i18n="hero_step_4">04 / LAUNCH</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- КЕЙСЫ -->
+    <section id="cases" class="px-5 py-16 sm:px-8 sm:py-24">
+      <div class="mx-auto max-w-7xl">
+        <div class="reveal mb-9 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <p class="eyebrow mb-3" data-i18n="cases_eyebrow">Избранные проекты</p>
+            <h2 class="text-3xl font-extrabold tracking-[-.04em] sm:text-5xl"><span data-i18n="cases_title">Кейсы</span><span class="text-cyan-300">.</span></h2>
+          </div>
+          <p class="max-w-md text-sm leading-6 text-white/50" data-i18n="cases_desc">
+            Реальные проекты с живыми ссылками. Нажмите на карточку, чтобы узнать подробности.
+          </p>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-2">
+          <!-- Кейс 1 -->
+          <article class="project-card reveal cursor-pointer rounded-3xl p-4 sm:p-5" tabindex="0" role="button" data-case="solmare">
+            <div class="project-visual">
+              <img src="solmare.jpg" alt="Скриншот сайта Solmare" loading="lazy">
+              <span class="mono absolute bottom-3 right-4 bg-black/50 px-2 py-1 rounded text-[10px] text-white/70 backdrop-blur-sm">CASE_01</span>
+            </div>
+            <div class="flex items-start justify-between gap-3 pt-5">
+              <div>
+                <p class="mono text-xs text-cyan-200">HOTEL · MONTENEGRO</p>
+                <h3 class="mt-2 text-xl font-bold">Solmare</h3>
+              </div>
+              <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/10 text-white/55" aria-hidden="true">↗</span>
+            </div>
+            <p class="mt-3 text-sm leading-6 text-white/55" data-i18n="case_solmare_desc">Сайт для премиального комплекса с мультиязычностью, галереей и сценарием прямого бронирования.</p>
+            <div class="tags mt-4 flex flex-wrap gap-2"><span>HTML</span><span>Tailwind</span><span>JavaScript</span></div>
+          </article>
+
+          <!-- Кейс 2 -->
+          <article class="project-card reveal cursor-pointer rounded-3xl p-4 sm:p-5" tabindex="0" role="button" data-case="uyut">
+            <div class="project-visual">
+              <img src="uyut.jpg" alt="Скриншот сайта УЮТ" loading="lazy">
+              <span class="mono absolute bottom-3 right-4 bg-black/50 px-2 py-1 rounded text-[10px] text-white/70 backdrop-blur-sm">CASE_02</span>
+            </div>
+            <div class="flex items-start justify-between gap-3 pt-5">
+              <div>
+                <p class="mono text-xs text-cyan-200">GUEST HOUSE · KURGANOVSKY</p>
+                <h3 class="mt-2 text-xl font-bold">УЮТ</h3>
+              </div>
+              <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/10 text-white/55" aria-hidden="true">↗</span>
+            </div>
+            <p class="mt-3 text-sm leading-6 text-white/55" data-i18n="case_uyut_desc">Сайт для загородного отдыха с интеграцией карт и фотогалереей.</p>
+            <div class="tags mt-4 flex flex-wrap gap-2"><span>HTML</span><span>CSS</span><span>JavaScript</span></div>
+          </article>
+
+          <!-- Кейс 3 -->
+          <article class="project-card reveal cursor-pointer rounded-3xl p-4 sm:p-5" tabindex="0" role="button" data-case="sasmrik">
+            <div class="project-visual">
+              <img src="sasmrik.jpg" alt="Скриншот сайта САСМРиК" loading="lazy">
+              <span class="mono absolute bottom-3 right-4 bg-black/50 px-2 py-1 rounded text-[10px] text-white/70 backdrop-blur-sm">CASE_03</span>
+            </div>
+            <div class="flex items-start justify-between gap-3 pt-5">
+              <div>
+                <p class="mono text-xs text-cyan-200">MEDICAL EDUCATION · SEVASTOPOL</p>
+                <h3 class="mt-2 text-xl font-bold">САСМРиК</h3>
+              </div>
+              <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/10 text-white/55" aria-hidden="true">↗</span>
+            </div>
+            <p class="mt-3 text-sm leading-6 text-white/55" data-i18n="case_sasmrik_desc">Корпоративный сайт с калькулятором аккредитации и разделом документов.</p>
+            <div class="tags mt-4 flex flex-wrap gap-2"><span>HTML</span><span>Tailwind</span><span>JavaScript</span></div>
+          </article>
+
+          <!-- Кейс 4 -->
+          <article class="project-card reveal cursor-pointer rounded-3xl p-4 sm:p-5" tabindex="0" role="button" data-case="linenails">
+            <div class="project-visual">
+              <img src="line-nails.jpg" alt="Скриншот сайта Line-Nails" loading="lazy">
+              <span class="mono absolute bottom-3 right-4 bg-black/50 px-2 py-1 rounded text-[10px] text-white/70 backdrop-blur-sm">CASE_04</span>
+            </div>
+            <div class="flex items-start justify-between gap-3 pt-5">
+              <div>
+                <p class="mono text-xs text-cyan-200">BEAUTY · YALTA</p>
+                <h3 class="mt-2 text-xl font-bold">Line-Nails</h3>
+              </div>
+              <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/10 text-white/55" aria-hidden="true">↗</span>
+            </div>
+            <p class="mt-3 text-sm leading-6 text-white/55" data-i18n="case_linenails_desc">Сайт для студии маникюра с онлайн-записью и галереей работ.</p>
+            <div class="tags mt-4 flex flex-wrap gap-2"><span>HTML</span><span>Tailwind</span><span>JavaScript</span></div>
+          </article>
+
+          <!-- Заглушка -->
+          <article class="project-card reveal rounded-3xl p-4 sm:p-5 border-dashed">
+            <div class="project-visual bg-transparent border-dashed flex items-center justify-center">
+              <div class="px-5 text-center">
+                <div class="mx-auto grid h-14 w-14 place-items-center rounded-2xl border border-cyan-300/20 bg-cyan-300/5 text-2xl text-cyan-200">＋</div>
+                <p class="mt-4 text-lg font-bold text-white" data-i18n="case_empty_title">Здесь может быть ваш проект</p>
+                <p class="mt-2 text-sm text-white/45" data-i18n="case_empty_desc">Следующий кейс начинается с короткого разговора</p>
+              </div>
+            </div>
+            <div class="mt-5">
+              <a href="#contacts" class="secondary-btn w-full"><span data-i18n="case_empty_btn">Обсудить идею</span> <span aria-hidden="true">↗</span></a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- УСЛУГИ -->
+    <section id="services" class="border-y border-white/[.06] bg-white/[.015] px-5 py-16 sm:px-8 sm:py-24">
+      <div class="mx-auto max-w-7xl">
+        <div class="reveal mb-9">
+          <p class="eyebrow mb-3" data-i18n="services_eyebrow">Форматы работы</p>
+          <h2 class="text-3xl font-extrabold tracking-[-.04em] sm:text-5xl"><span data-i18n="services_title">Услуги и стоимость</span><span class="text-cyan-300">.</span></h2>
+          <p class="mt-4 max-w-2xl text-sm leading-6 text-white/50" data-i18n="services_desc">
+            Стоимость «от» — ориентир. Итоговая цена зависит от структуры, дизайна, функциональности и материалов проекта.
+          </p>
+        </div>
+
+        <div class="grid gap-5 lg:grid-cols-3">
+          <article class="service-card reveal rounded-3xl p-6 sm:p-7">
+            <div class="mono text-xs text-cyan-200">01 / START</div>
+            <h3 class="mt-5 text-2xl font-bold" data-i18n="service_1_title">Сайт-визитка</h3>
+            <p class="mt-3 min-h-12 text-sm leading-6 text-white/50" data-i18n="service_1_desc">Компактная страница, чтобы представить вас, услуги и способы связи.</p>
+            <p class="mt-7"><span class="text-sm text-white/40" data-i18n="price_from">от</span> <strong class="text-4xl font-extrabold">7 000 ₽</strong></p>
+            <ul class="mt-6 space-y-3 text-sm text-white/65">
+              <li class="flex gap-3"><span class="text-cyan-300">✓</span> <span data-i18n="service_1_feat_1">Адаптивная вёрстка</span></li>
+              <li class="flex gap-3"><span class="text-cyan-300">✓</span> <span data-i18n="service_1_feat_2">Базовая структура и контакты</span></li>
+              <li class="flex gap-3"><span class="text-cyan-300">✓</span> <span data-i18n="service_1_feat_3">Подготовка к публикации</span></li>
+            </ul>
+            <button class="order-service secondary-btn mt-7 w-full" type="button" data-service="Сайт-визитка"><span data-i18n="service_order_btn">Заказать</span></button>
+          </article>
+
+          <article class="service-card gradient-border reveal rounded-3xl p-6 sm:p-7">
+            <div class="flex items-center justify-between gap-2">
+              <span class="mono text-xs text-cyan-200">02 / GROWTH</span>
+              <span class="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-cyan-100" data-i18n="service_popular">Популярный формат</span>
+            </div>
+            <h3 class="mt-5 text-2xl font-bold" data-i18n="service_2_title">Лендинг под ключ</h3>
+            <p class="mt-3 min-h-12 text-sm leading-6 text-white/50" data-i18n="service_2_desc">Страница с понятной структурой, презентацией предложения и формой заявки.</p>
+            <p class="mt-7"><span class="text-sm text-white/40" data-i18n="price_from">от</span> <strong class="text-4xl font-extrabold">15 000 ₽</strong></p>
+            <ul class="mt-6 space-y-3 text-sm text-white/65">
+              <li class="flex gap-3"><span class="text-cyan-300">✓</span> <span data-i18n="service_2_feat_1">Прототип и визуальная концепция</span></li>
+              <li class="flex gap-3"><span class="text-cyan-300">✓</span> <span data-i18n="service_2_feat_2">Адаптивность для мобильных</span></li>
+              <li class="flex gap-3"><span class="text-cyan-300">✓</span> <span data-i18n="service_2_feat_3">Интерактивные элементы</span></li>
+            </ul>
+            <button class="order-service primary-btn mt-7 w-full" type="button" data-service="Лендинг под ключ"><span data-i18n="service_order_btn">Заказать</span></button>
+          </article>
+
+          <article class="service-card reveal rounded-3xl p-6 sm:p-7">
+            <div class="mono text-xs text-cyan-200">03 / COMMERCE</div>
+            <h3 class="mt-5 text-2xl font-bold" data-i18n="service_3_title">Интернет-магазин</h3>
+            <p class="mt-3 min-h-12 text-sm leading-6 text-white/50" data-i18n="service_3_desc">Каталог товаров и пользовательский путь для онлайн-продаж.</p>
+            <p class="mt-7"><span class="text-sm text-white/40" data-i18n="price_from">от</span> <strong class="text-4xl font-extrabold">30 000 ₽</strong></p>
+            <ul class="mt-6 space-y-3 text-sm text-white/65">
+              <li class="flex gap-3"><span class="text-cyan-300">✓</span> <span data-i18n="service_3_feat_1">Структура каталога</span></li>
+              <li class="flex gap-3"><span class="text-cyan-300">✓</span> <span data-i18n="service_3_feat_2">Карточки товаров</span></li>
+              <li class="flex gap-3"><span class="text-cyan-300">✓</span> <span data-i18n="service_3_feat_3">Обсуждение интеграций</span></li>
+            </ul>
+            <button class="order-service secondary-btn mt-7 w-full" type="button" data-service="Интернет-магазин"><span data-i18n="service_order_btn">Заказать</span></button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ОБО МНЕ -->
+    <section id="about" class="px-5 py-16 sm:px-8 sm:py-24">
+      <div class="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[.8fr_1.2fr]">
+        <div class="reveal">
+          <p class="eyebrow mb-3" data-i18n="about_eyebrow">Кто за проектом</p>
+          <h2 class="text-3xl font-extrabold tracking-[-.04em] sm:text-5xl"><span data-i18n="about_title">Обо мне</span><span class="text-cyan-300">.</span></h2>
+        </div>
+
+        <div class="reveal">
+          <!-- Аватарка в блоке Обо мне -->
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-6">
+            <img src="avatar.jpg" alt="Фото Seato" class="h-28 w-28 rounded-full object-cover border-2 border-cyan-500/30 shadow-[0_0_20px_rgba(0,229,255,0.2)]">
+            <div>
+              <p class="text-xl font-bold text-white">Привет, я Seato 👋</p>
+              <p class="text-sm text-cyan-200 mono">Веб-разработчик</p>
+            </div>
+          </div>
+
+          <p class="text-lg leading-8 text-white/75" data-i18n="about_text">
+            Я создаю сайты, которые помогают бизнесу понятнее рассказывать о своих услугах и упрощают путь клиента к заявке. В работе соединяю аккуратный интерфейс, адаптивную разработку и практичный подход к запуску.
+          </p>
+          <div class="mt-8">
+            <p class="mono mb-3 text-xs uppercase tracking-wider text-white/40" data-i18n="about_stack">Мой стек</p>
+            <div class="tags flex flex-wrap gap-2">
+              <span>HTML</span><span>CSS</span><span>Tailwind CSS</span><span>JavaScript</span><span>GitHub Pages</span><span>Vercel</span>
+            </div>
+          </div>
+          <div class="mt-8 grid gap-3 sm:grid-cols-3">
+            <div class="glass rounded-2xl p-4"><p class="mono text-xs text-cyan-200">01</p><p class="mt-2 text-sm font-semibold" data-i18n="about_step_1">Сначала задача</p></div>
+            <div class="glass rounded-2xl p-4"><p class="mono text-xs text-cyan-200">02</p><p class="mt-2 text-sm font-semibold" data-i18n="about_step_2">Потом интерфейс</p></div>
+            <div class="glass rounded-2xl p-4"><p class="mono text-xs text-cyan-200">03</p><p class="mt-2 text-sm font-semibold" data-i18n="about_step_3">Затем запуск</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- КОНТАКТЫ -->
+    <section id="contacts" class="px-5 pb-20 sm:px-8 sm:pb-28">
+      <div class="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[.8fr_1.2fr]">
+        <div class="reveal">
+          <p class="eyebrow mb-3" data-i18n="contacts_eyebrow">Следующий шаг</p>
+          <h2 class="text-3xl font-extrabold tracking-[-.04em] sm:text-5xl"><span data-i18n="contacts_title_1">Расскажите</span><br><span data-i18n="contacts_title_2">о проекте</span><span class="text-cyan-300">.</span></h2>
+          <p class="mt-5 max-w-md text-sm leading-7 text-white/50" data-i18n="contacts_desc">
+            Опишите задачу в нескольких словах — обсудим подход, сроки и ориентировочную стоимость.
+          </p>
+          <div class="mt-7 flex flex-col gap-3">
+            <a href="https://t.me/mky82" target="_blank" rel="noopener noreferrer" class="secondary-btn justify-start">Telegram <span class="ml-auto text-cyan-200">↗</span></a>
+            <a href="https://wa.me/qr/7SGEALQOE2SJN1" target="_blank" rel="noopener noreferrer" class="secondary-btn justify-start">WhatsApp <span class="ml-auto text-cyan-200">↗</span></a>
+            <a href="mailto:seato.more.2008@mail.ru" class="secondary-btn justify-start">Email <span class="ml-auto text-cyan-200">↗</span></a>
+          </div>
+        </div>
+
+        <form id="contactForm" class="glass reveal rounded-3xl p-5 sm:p-8" action="https://formspree.io/f/mbgggpzb" method="POST">
+          <input type="hidden" name="_subject" value="Новая заявка с сайта Seato">
+          <div class="grid gap-4 sm:grid-cols-2">
+            <label class="text-sm font-semibold text-white/80">
+              <span data-i18n="form_name">Имя</span>
+              <input class="form-input mt-2" type="text" name="name" placeholder="Как к вам обращаться" autocomplete="name" required minlength="2">
+            </label>
+
+            <label class="text-sm font-semibold text-white/80">
+              <span data-i18n="form_contact">Телефон или Telegram</span>
+              <input class="form-input mt-2" type="text" name="contact" placeholder="@username или +7..." required>
+            </label>
+
+            <label class="text-sm font-semibold text-white/80 sm:col-span-2">
+              <span data-i18n="form_message">Краткое описание задачи</span>
+              <textarea class="form-input mt-2 min-h-32 resize-y" name="message" placeholder="Какой сайт нужен и чем он должен помочь?" required minlength="10"></textarea>
+            </label>
+          </div>
+
+          <p id="formError" class="mt-4 hidden rounded-xl border border-red-400/20 bg-red-400/10 p-3 text-sm leading-6 text-red-200" role="alert"></p>
+
+          <button id="submitButton" class="primary-btn mt-5 w-full" type="submit">
+            <span data-i18n="form_submit">Отправить заявку</span> <span aria-hidden="true">↗</span>
+          </button>
+
+          <div id="formSuccess" class="mt-4 hidden rounded-xl border border-cyan-300/20 bg-cyan-300/10 p-4 text-sm leading-6 text-cyan-100" role="status">
+            <span data-i18n="form_success">Спасибо! Я свяжусь с вами в течение 15 минут.</span>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ОПЛАТА (заглушка) -->
+    <section id="payment" class="px-5 pb-20 sm:px-8 sm:pb-28">
+      <div class="mx-auto max-w-3xl">
+        <div class="glass rounded-3xl p-6 sm:p-8 text-center">
+          <h3 class="text-xl font-bold" data-i18n="payment_title">Оплата услуг</h3>
+          <p class="mt-2 text-sm text-white/50" data-i18n="payment_desc">
+            Онлайн-оплата будет доступна после подключения платёжной системы. Пока вы можете связаться со мной для обсуждения деталей.
+          </p>
+          <a href="https://t.me/mky82" target="_blank" rel="noopener noreferrer" class="primary-btn mt-5 inline-flex">
+            <span data-i18n="payment_btn">Написать в Telegram</span> ↗
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-white/[.07] px-5 py-7 sm:px-8">
+    <div class="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <p class="text-sm text-white/45">© <span id="year"></span> Seato. <span data-i18n="footer_text">Сделано с вниманием к деталям.</span></p>
+      <div class="mono flex flex-wrap gap-4 text-xs text-white/40">
+        <a href="https://t.me/mky82" target="_blank" rel="noopener noreferrer" class="hover:text-cyan-200">TELEGRAM ↗</a>
+        <a href="https://wa.me/qr/7SGEALQOE2SJN1" target="_blank" rel="noopener noreferrer" class="hover:text-cyan-200">WHATSAPP ↗</a>
+        <a href="mailto:seato.more.2008@mail.ru" class="hover:text-cyan-200">EMAIL ↗</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Модалка кейса -->
+  <div id="caseModal" class="modal fixed inset-0 z-[60] flex items-center justify-center bg-black/75 p-4 backdrop-blur-md">
+    <div class="modal-panel glass relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl p-6 sm:p-8">
+      <button class="close-modal absolute right-4 top-4 grid h-11 w-11 place-items-center rounded-xl border border-white/10 text-2xl text-white/70 hover:bg-white/5" type="button" aria-label="Закрыть">×</button>
+      <p id="caseModalEyebrow" class="mono text-xs uppercase tracking-widest text-cyan-200"></p>
+      <h2 id="caseModalTitle" class="mt-3 pr-10 text-3xl font-extrabold"></h2>
+      <p id="caseModalDescription" class="mt-4 text-sm leading-7 text-white/60"></p>
+      <div id="caseModalTags" class="tags mt-5 flex flex-wrap gap-2"></div>
+      <a id="caseModalLink" href="#" target="_blank" rel="noopener noreferrer" class="secondary-btn mt-5">Открыть сайт ↗</a>
+    </div>
+  </div>
+
+  <script>
+    const translations = {
+      ru: {
+        header_role: "web developer", nav_cases: "Кейсы", nav_services: "Услуги", nav_about: "Обо мне", nav_contacts: "Контакты",
+        contact_btn: "Связаться", hero_badge: "ДИЗАЙН · РАЗРАБОТКА · ЗАПУСК", hero_title_1: "Создаю сайты,", hero_title_2: "которые приносят", hero_title_3: "клиентов",
+        hero_desc: "Разработка под ключ: от идеи до запуска. Продуманный дизайн, адаптивная вёрстка и удобный путь от первого взгляда до заявки.",
+        hero_btn_cases: "Посмотреть работы", hero_btn_contact: "Обсудить проект",
+        hero_step_1: "01 / CONCEPT", hero_step_2: "02 / DESIGN", hero_step_3: "03 / DEVELOPMENT", hero_step_4: "04 / LAUNCH",
+        cases_eyebrow: "Избранные проекты", cases_title: "Кейсы", cases_desc: "Реальные проекты с живыми ссылками. Нажмите на карточку, чтобы узнать подробности.",
+        case_solmare_desc: "Сайт для премиального комплекса с мультиязычностью, галереей и сценарием прямого бронирования.",
+        case_uyut_desc: "Сайт для загородного отдыха с интеграцией карт и фотогалереей.",
+        case_sasmrik_desc: "Корпоративный сайт с калькулятором аккредитации и разделом документов.",
+        case_linenails_desc: "Сайт для студии маникюра с онлайн-записью и галереей работ.",
+        case_empty_title: "Здесь может быть ваш проект", case_empty_desc: "Следующий кейс начинается с короткого разговора", case_empty_btn: "Обсудить идею",
+        services_eyebrow: "Форматы работы", services_title: "Услуги и стоимость", services_desc: "Стоимость «от» — ориентир. Итоговая цена зависит от структуры, дизайна, функциональности и материалов проекта.",
+        service_1_title: "Сайт-визитка", service_1_desc: "Компактная страница, чтобы представить вас, услуги и способы связи.",
+        service_1_feat_1: "Адаптивная вёрстка", service_1_feat_2: "Базовая структура и контакты", service_1_feat_3: "Подготовка к публикации",
+        service_2_title: "Лендинг под ключ", service_2_desc: "Страница с понятной структурой, презентацией предложения и формой заявки.",
+        service_2_feat_1: "Прототип и визуальная концепция", service_2_feat_2: "Адаптивность для мобильных", service_2_feat_3: "Интерактивные элементы",
+        service_3_title: "Интернет-магазин", service_3_desc: "Каталог товаров и пользовательский путь для онлайн-продаж.",
+        service_3_feat_1: "Структура каталога", service_3_feat_2: "Карточки товаров", service_3_feat_3: "Обсуждение интеграций",
+        service_order_btn: "Заказать", price_from: "от", service_popular: "Популярный формат",
+        about_eyebrow: "Кто за проектом", about_title: "Обо мне", about_text: "Я создаю сайты, которые помогают бизнесу понятнее рассказывать о своих услугах и упрощают путь клиента к заявке. В работе соединяю аккуратный интерфейс, адаптивную разработку и практичный подход к запуску.",
+        about_stack: "Мой стек", about_step_1: "Сначала задача", about_step_2: "Потом интерфейс", about_step_3: "Затем запуск",
+        contacts_eyebrow: "Следующий шаг", contacts_title_1: "Расскажите", contacts_title_2: "о проекте", contacts_desc: "Опишите задачу в нескольких словах — обсудим подход, сроки и ориентировочную стоимость.",
+        form_name: "Имя", form_contact: "Телефон или Telegram", form_message: "Краткое описание задачи", form_submit: "Отправить заявку", form_success: "Спасибо! Я свяжусь с вами в течение 15 минут.",
+        payment_title: "Оплата услуг", payment_desc: "Онлайн-оплата будет доступна после подключения платёжной системы. Пока вы можете связаться со мной для обсуждения деталей.", payment_btn: "Написать в Telegram",
+        footer_text: "Сделано с вниманием к деталям."
+      },
+      en: {
+        header_role: "web developer", nav_cases: "Cases", nav_services: "Services", nav_about: "About", nav_contacts: "Contacts",
+        contact_btn: "Contact", hero_badge: "DESIGN · DEVELOPMENT · LAUNCH", hero_title_1: "I build websites", hero_title_2: "that bring", hero_title_3: "clients",
+        hero_desc: "Turnkey development: from idea to launch. Thoughtful design, responsive layout, and a smooth path from first impression to inquiry.",
+        hero_btn_cases: "View works", hero_btn_contact: "Discuss project",
+        hero_step_1: "01 / CONCEPT", hero_step_2: "02 / DESIGN", hero_step_3: "03 / DEVELOPMENT", hero_step_4: "04 / LAUNCH",
+        cases_eyebrow: "Featured projects", cases_title: "Cases", cases_desc: "Real projects with live links. Click on a card to learn more.",
+        case_solmare_desc: "Website for a premium apartment complex with multilingual support, gallery, and direct booking scenario.",
+        case_uyut_desc: "Website for a countryside guest house with map integration and photo gallery.",
+        case_sasmrik_desc: "Corporate website with an accreditation calculator and documents section.",
+        case_linenails_desc: "Website for a nail studio with online booking and portfolio gallery.",
+        case_empty_title: "Your project could be here", case_empty_desc: "The next case starts with a short conversation", case_empty_btn: "Discuss idea",
+        services_eyebrow: "Work formats", services_title: "Services & pricing", services_desc: "Prices are indicative. The final cost depends on structure, design, functionality, and project materials.",
+        service_1_title: "Landing page", service_1_desc: "A compact page to present you, your services, and contact methods.",
+        service_1_feat_1: "Responsive layout", service_1_feat_2: "Basic structure and contacts", service_1_feat_3: "Preparation for publication",
+        service_2_title: "Turnkey landing", service_2_desc: "A page with clear structure, offer presentation, and inquiry form.",
+        service_2_feat_1: "Prototype and visual concept", service_2_feat_2: "Mobile responsiveness", service_2_feat_3: "Interactive elements",
+        service_3_title: "Online store", service_3_desc: "Product catalog and user journey for online sales.",
+        service_3_feat_1: "Catalog structure", service_3_feat_2: "Product cards", service_3_feat_3: "Integration discussion",
+        service_order_btn: "Order", price_from: "from", service_popular: "Popular format",
+        about_eyebrow: "Behind the project", about_title: "About me", about_text: "I build websites that help businesses communicate their services more clearly and simplify the client's path to an inquiry. I combine clean interface, responsive development, and a practical approach to launch.",
+        about_stack: "My stack", about_step_1: "Task first", about_step_2: "Then interface", about_step_3: "Then launch",
+        contacts_eyebrow: "Next step", contacts_title_1: "Tell me", contacts_title_2: "about the project", contacts_desc: "Describe the task in a few words — we'll discuss the approach, timelines, and approximate cost.",
+        form_name: "Name", form_contact: "Phone or Telegram", form_message: "Brief task description", form_submit: "Send inquiry", form_success: "Thank you! I'll get back to you within 15 minutes.",
+        payment_title: "Payment for services", payment_desc: "Online payment will be available after connecting the payment system. For now, you can contact me to discuss details.", payment_btn: "Message on Telegram",
+        footer_text: "Made with attention to detail."
+      }
+    };
+
+    let currentLang = 'ru';
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) el.textContent = translations[lang][key];
+      });
+      document.querySelectorAll('.lang-switch button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+    }
+    document.querySelectorAll('.lang-switch button').forEach(btn => btn.addEventListener('click', () => setLanguage(btn.dataset.lang)));
+
+    const caseDetails = {
+      solmare: { eyebrow: "HOTEL · MONTENEGRO", title: "Solmare — апартаменты в Будве", description: "Сайт для премиального комплекса с мультиязычностью, галереей помещений и сценарием прямого бронирования.", tags: ["HTML", "Tailwind", "JavaScript"], url: "https://sasmrik.github.io/solmare-budva/" },
+      uyut: { eyebrow: "GUEST HOUSE · KURGANOVSKY", title: "УЮТ — гостевой дом", description: "Сайт для загородного отдыха с интеграцией карт и фотогалереей.", tags: ["HTML", "CSS", "JavaScript"], url: "http://уют-кургановский.рф.swtest.ru/" },
+      sasmrik: { eyebrow: "MEDICAL EDUCATION · SEVASTOPOL", title: "САСМРиК — учебный центр", description: "Корпоративный сайт с калькулятором аккредитации и разделом документов.", tags: ["HTML", "Tailwind", "JavaScript"], url: "https://sasmrik.github.io/" },
+      linenails: { eyebrow: "BEAUTY · YALTA", title: "Line-Nails — студия маникюра", description: "Сайт для студии маникюра с онлайн-записью и галереей работ.", tags: ["HTML", "Tailwind", "JavaScript"], url: "https://sasmrik.github.io/line-nails/#top" }
+    };
+
+    const caseModal = document.getElementById("caseModal");
+    function openModal(modal) { modal.classList.add("open"); document.body.style.overflow = "hidden"; }
+    function closeModal(modal) { modal.classList.remove("open"); if (!document.querySelector(".modal.open")) document.body.style.overflow = ""; }
+    function showCase(caseKey) {
+      const item = caseDetails[caseKey];
+      if (!item) return;
+      document.getElementById("caseModalEyebrow").textContent = item.eyebrow;
+      document.getElementById("caseModalTitle").textContent = item.title;
+      document.getElementById("caseModalDescription").textContent = item.description;
+      const tags = document.getElementById("caseModalTags");
+      tags.replaceChildren();
+      item.tags.forEach(tag => { const chip = document.createElement("span"); chip.textContent = tag; tags.appendChild(chip); });
+      const link = document.getElementById("caseModalLink");
+      if (item.url) { link.href = item.url; link.classList.remove("hidden"); } else link.classList.add("hidden");
+      openModal(caseModal);
+    }
+
+    document.querySelectorAll("[data-case]").forEach(card => {
+      card.addEventListener("click", () => showCase(card.dataset.case));
+      card.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); showCase(card.dataset.case); } });
+    });
+    document.querySelectorAll(".close-modal").forEach(button => button.addEventListener("click", () => closeModal(button.closest(".modal"))));
+    document.querySelectorAll(".modal").forEach(modal => modal.addEventListener("click", event => { if (event.target === modal) closeModal(modal); }));
+    document.addEventListener("keydown", event => { if (event.key === "Escape") document.querySelectorAll(".modal.open").forEach(closeModal); });
+
+    document.querySelectorAll(".order-service").forEach(button => {
+      button.addEventListener("click", () => {
+        const messageField = document.querySelector('[name="message"]');
+        messageField.value = `Интересует услуга: ${button.dataset.service}.`;
+        document.getElementById("contacts").scrollIntoView({ behavior: "smooth" });
+        window.setTimeout(() => { document.querySelector('[name="name"]').focus({ preventScroll: true }); }, 450);
+      });
+    });
+
+    const menuToggle = document.getElementById("menuToggle");
+    const mobileMenu = document.getElementById("mobileMenu");
+    menuToggle.addEventListener("click", () => {
+      const isOpen = mobileMenu.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuToggle.textContent = isOpen ? "×" : "☰";
+    });
+    mobileMenu.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        mobileMenu.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.textContent = "☰";
+      });
+    });
+
+    const form = document.getElementById("contactForm");
+    const formError = document.getElementById("formError");
+    const formSuccess = document.getElementById("formSuccess");
+    const submitButton = document.getElementById("submitButton");
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+      formError.classList.add("hidden");
+      formSuccess.classList.add("hidden");
+      if (!form.reportValidity()) return;
+      const originalButtonText = submitButton.innerHTML;
+      submitButton.disabled = true;
+      submitButton.textContent = "Отправка…";
+      try {
+        const response = await fetch(form.action, { method: "POST", body: new FormData(form), headers: { "Accept": "application/json" } });
+        if (!response.ok) throw new Error("Не удалось отправить форму.");
+        form.reset();
+        formSuccess.classList.remove("hidden");
+        formSuccess.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      } catch (error) {
+        formError.textContent = "Не удалось отправить заявку. Проверьте подключение или свяжитесь со мной напрямую.";
+        formError.classList.remove("hidden");
+      } finally {
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalButtonText;
+      }
+    });
+
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add("visible"); revealObserver.unobserve(entry.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll(".reveal").forEach(element => revealObserver.observe(element));
+    document.getElementById("year").textContent = new Date().getFullYear();
+    setLanguage('ru');
+  </script>
+</body>
+</html>
