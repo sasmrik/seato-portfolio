@@ -82,16 +82,30 @@
       border: 1px solid rgba(255,255,255,.09); background: rgba(10,10,10,.78);
       box-shadow: 0 10px 40px rgba(0,0,0,.28); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
     }
+    
+    /* Улучшенные карточки проектов */
     .project-card, .service-card {
       border: 1px solid rgba(255,255,255,.09);
       background: linear-gradient(145deg, rgba(21,24,30,.94), rgba(13,15,19,.96));
       box-shadow: 0 20px 55px rgba(0,0,0,.19);
-      transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+      transition: transform .3s cubic-bezier(0.4, 0, 0.2, 1), border-color .3s ease, box-shadow .3s ease;
+      position: relative;
+    }
+    .project-card::after {
+      content: "";
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .3s ease;
+      box-shadow: 0 0 40px rgba(0,229,255,.15);
     }
     .project-card:hover, .service-card:hover {
-      transform: translateY(-5px); border-color: rgba(0,229,255,.34);
-      box-shadow: 0 24px 65px rgba(0,0,0,.32), 0 0 30px rgba(0,229,255,.05);
+      transform: translateY(-6px); border-color: rgba(0,229,255,.4);
+      box-shadow: 0 24px 65px rgba(0,0,0,.4), 0 0 30px rgba(0,229,255,.08);
     }
+    .project-card:hover::after { opacity: 1; }
+
     .project-visual {
       position: relative; display: flex; min-height: 235px; overflow: hidden;
       align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,.07);
@@ -99,14 +113,18 @@
     }
     .project-visual img {
       width: 100%; height: 100%; object-fit: cover; object-position: top;
-      transition: transform 0.5s ease;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .project-card:hover .project-visual img { transform: scale(1.05); }
+    .project-card:hover .project-visual img { transform: scale(1.06); }
+    
     .tags span {
       border: 1px solid rgba(255,255,255,.1); border-radius: 999px;
       background: rgba(255,255,255,.035); padding: .35rem .65rem;
       color: #b9c1cc; font-family: "DM Mono", monospace; font-size: .68rem;
+      transition: background .2s, color .2s;
     }
+    .project-card:hover .tags span { background: rgba(0,229,255,.1); color: #9df4ff; border-color: rgba(0,229,255,.2); }
+    
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity .65s ease, transform .65s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
     .modal { opacity: 0; visibility: hidden; transition: opacity .22s ease, visibility .22s ease; }
@@ -248,6 +266,26 @@
         </div>
 
         <div class="grid gap-5 md:grid-cols-2">
+          
+          <!-- НОВЫЙ КЕЙС: Колибри -->
+          <article class="project-card reveal cursor-pointer rounded-3xl p-4 sm:p-5" tabindex="0" role="button" data-case="kolibri">
+            <div class="project-visual">
+              <img src="kolibri.jpg" alt="Скриншот сайта Колибри" loading="lazy">
+              <span class="mono absolute bottom-3 right-4 bg-black/50 px-2 py-1 rounded text-[10px] text-white/70 backdrop-blur-sm flex items-center gap-1">
+                <span class="h-1.5 w-1.5 bg-green-400 rounded-full animate-pulse"></span> LIVE
+              </span>
+            </div>
+            <div class="flex items-start justify-between gap-3 pt-5">
+              <div>
+                <p class="mono text-xs text-cyan-200">BUSINESS · ACHINSK</p>
+                <h3 class="mt-2 text-xl font-bold">Колибри</h3>
+              </div>
+              <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/10 text-white/55" aria-hidden="true">↗</span>
+            </div>
+            <p class="mt-3 text-sm leading-6 text-white/55" data-i18n="case_kolibri_desc">Сайт-каталог для студии декора с собственной админ-панелью, интеграцией карт и защищенным протоколом.</p>
+            <div class="tags mt-4 flex flex-wrap gap-2"><span>HTML</span><span>JS</span><span>Admin Panel</span><span>SEO</span></div>
+          </article>
+
           <!-- Кейс 1 -->
           <article class="project-card reveal cursor-pointer rounded-3xl p-4 sm:p-5" tabindex="0" role="button" data-case="solmare">
             <div class="project-visual">
@@ -399,7 +437,6 @@
         </div>
 
         <div class="reveal">
-          <!-- Аватарка в блоке Обо мне -->
           <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-6">
             <img src="avatar.jpg" alt="Фото Seato" class="h-28 w-28 rounded-full object-cover border-2 border-cyan-500/30 shadow-[0_0_20px_rgba(0,229,255,0.2)]">
             <div>
@@ -414,7 +451,7 @@
           <div class="mt-8">
             <p class="mono mb-3 text-xs uppercase tracking-wider text-white/40" data-i18n="about_stack">Мой стек</p>
             <div class="tags flex flex-wrap gap-2">
-              <span>HTML</span><span>CSS</span><span>Tailwind CSS</span><span>JavaScript</span><span>GitHub Pages</span><span>Vercel</span>
+              <span>HTML</span><span>CSS</span><span>Tailwind CSS</span><span>JavaScript</span><span>GitHub Pages</span><span>Vercel</span><span>SpaceWeb</span>
             </div>
           </div>
           <div class="mt-8 grid gap-3 sm:grid-cols-3">
@@ -473,21 +510,6 @@
         </form>
       </div>
     </section>
-
-    <!-- ОПЛАТА (заглушка) -->
-    <section id="payment" class="px-5 pb-20 sm:px-8 sm:pb-28">
-      <div class="mx-auto max-w-3xl">
-        <div class="glass rounded-3xl p-6 sm:p-8 text-center">
-          <h3 class="text-xl font-bold" data-i18n="payment_title">Оплата услуг</h3>
-          <p class="mt-2 text-sm text-white/50" data-i18n="payment_desc">
-            Онлайн-оплата будет доступна после подключения платёжной системы. Пока вы можете связаться со мной для обсуждения деталей.
-          </p>
-          <a href="https://t.me/mky82" target="_blank" rel="noopener noreferrer" class="primary-btn mt-5 inline-flex">
-            <span data-i18n="payment_btn">Написать в Telegram</span> ↗
-          </a>
-        </div>
-      </div>
-    </section>
   </main>
 
   <footer class="border-t border-white/[.07] px-5 py-7 sm:px-8">
@@ -522,6 +544,7 @@
         hero_btn_cases: "Посмотреть работы", hero_btn_contact: "Обсудить проект",
         hero_step_1: "01 / CONCEPT", hero_step_2: "02 / DESIGN", hero_step_3: "03 / DEVELOPMENT", hero_step_4: "04 / LAUNCH",
         cases_eyebrow: "Избранные проекты", cases_title: "Кейсы", cases_desc: "Реальные проекты с живыми ссылками. Нажмите на карточку, чтобы узнать подробности.",
+        case_kolibri_desc: "Сайт-каталог для студии декора с собственной админ-панелью, интеграцией карт и защищенным протоколом.",
         case_solmare_desc: "Сайт для премиального комплекса с мультиязычностью, галереей и сценарием прямого бронирования.",
         case_uyut_desc: "Сайт для загородного отдыха с интеграцией карт и фотогалереей.",
         case_sasmrik_desc: "Корпоративный сайт с калькулятором аккредитации и разделом документов.",
@@ -549,6 +572,7 @@
         hero_btn_cases: "View works", hero_btn_contact: "Discuss project",
         hero_step_1: "01 / CONCEPT", hero_step_2: "02 / DESIGN", hero_step_3: "03 / DEVELOPMENT", hero_step_4: "04 / LAUNCH",
         cases_eyebrow: "Featured projects", cases_title: "Cases", cases_desc: "Real projects with live links. Click on a card to learn more.",
+        case_kolibri_desc: "Catalog website for a decor studio with a custom admin panel, map integration, and secure protocol.",
         case_solmare_desc: "Website for a premium apartment complex with multilingual support, gallery, and direct booking scenario.",
         case_uyut_desc: "Website for a countryside guest house with map integration and photo gallery.",
         case_sasmrik_desc: "Corporate website with an accreditation calculator and documents section.",
@@ -586,6 +610,13 @@
     document.querySelectorAll('.lang-switch button').forEach(btn => btn.addEventListener('click', () => setLanguage(btn.dataset.lang)));
 
     const caseDetails = {
+      kolibri: { 
+        eyebrow: "DECOR STUDIO · ACHINSK", 
+        title: "Колибри — студия декора", 
+        description: "Полноценный сайт-каталог для бизнеса с собственной админ-панелью для управления товарами. В проекте настроены: SSL-сертификат, Яндекс.Метрика с согласием на cookie (152-ФЗ), подтверждение домена через Госуслуги и интеграция с Яндекс.Картами.", 
+        tags: ["HTML", "CSS", "JS", "Admin Panel", "SEO", "SSL"], 
+        url: "https://kolibri-achinsk.ru" 
+      },
       solmare: { eyebrow: "HOTEL · MONTENEGRO", title: "Solmare — апартаменты в Будве", description: "Сайт для премиального комплекса с мультиязычностью, галереей помещений и сценарием прямого бронирования.", tags: ["HTML", "Tailwind", "JavaScript"], url: "https://sasmrik.github.io/solmare-budva/" },
       uyut: { eyebrow: "GUEST HOUSE · KURGANOVSKY", title: "УЮТ — гостевой дом", description: "Сайт для загородного отдыха с интеграцией карт и фотогалереей.", tags: ["HTML", "CSS", "JavaScript"], url: "http://уют-кургановский.рф.swtest.ru/" },
       sasmrik: { eyebrow: "MEDICAL EDUCATION · SEVASTOPOL", title: "САСМРиК — учебный центр", description: "Корпоративный сайт с калькулятором аккредитации и разделом документов.", tags: ["HTML", "Tailwind", "JavaScript"], url: "https://sasmrik.github.io/" },
